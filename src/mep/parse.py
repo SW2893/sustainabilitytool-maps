@@ -26,13 +26,15 @@ Ensure that the environment has your Google Maps API key in the environment
 variable "GM_API_KEY"
 """
 
-DIR_NAME = os.path.dirname(__file__)
-os.chdir(DIR_NAME)
-logger.info(f"Parsing csv data in {DIR_NAME}")
-
 API_KEY = os.environ.get('GM_API_KEY')
 if API_KEY is None:
     raise Exception("No API Key found - set environment variable GM_API_KEY and run again")
+else:
+    logger.info(f"Got Google Maps API key: xxxxxxx{API_KEY[-4:]}")
+
+DIR_NAME = os.path.dirname(__file__) or "."
+logger.info(f"Parsing csv data in: {DIR_NAME}")
+os.chdir(DIR_NAME)
 
 # Load the data and extact the headings (first row) and data rows (other rows)
 rows = []

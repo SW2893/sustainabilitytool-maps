@@ -14,7 +14,7 @@
     <meta name="author" content="www.procedural.build">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/static/css/main.css">
 
   </head>
@@ -34,7 +34,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link" href="#">Home</a>
+              <a class="nav-link" href="https://www.supplychainschool.co.uk">Home</a>
             </li>
 
             <li class="nav-item dropdown">
@@ -42,7 +42,7 @@
                 Maps
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">MEPs</a>
+                <a class="dropdown-item" href="#">Material Exchange Platforms (MEPs)</a>
               </div>
             </li>
 
@@ -51,8 +51,13 @@
       </nav>
 
       <div class="container-fluid">
-        <b>Filters:</b>
-        <div class="row map-filters"></div>
+        <span class="caret"></span>
+        <a class="text-dark collapsed" data-toggle="collapse" data-target="#collapseExampleArea" href="#collapseExampleArea" aria-expanded="false">
+          <label class="map-filter-label">Filters:</label>
+        </a>
+        <div id="collapseExampleArea" class="collapse">
+          <div class="row map-filters"></div>
+        </div>
       </div>
 
       <div class="container-fluid map-container">

@@ -6,6 +6,7 @@ pipeline {
   }
 
   environment {
+    GM_API_KEY = credentials('google-maps-DEV-api-key')
     HOME = '.'
   }
 
