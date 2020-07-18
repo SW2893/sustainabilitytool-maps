@@ -1,6 +1,8 @@
 var map;
+var raw_data = [];
 var markers = [];
 var current_filters = {}
+var region_features = []
 
 // Sets the map on all markers in the array.
 function setMapOnAll(map) {
@@ -10,9 +12,23 @@ function setMapOnAll(map) {
 }
 
 function clearMarkers() {
+  console.log("Clearing markers")
   setMapOnAll(null);
   markers = []
 }
+
+function clearRegions() {
+  console.log("Clearing regions")
+  /*for (var feature of region_features) {
+    console.log("Checking to clear feature", feature)
+    if (feature.getProperty('hasData') === false) {
+      console.log(" - Permanently removing unused feature", feature)
+      map.data.remove(feature)
+    }
+  }*/
+  map.data.setStyle({visible: false})
+}
+
 
 function getMepText(mep) {
   var content_string = ""
@@ -77,7 +93,90 @@ function filter_data(data) {
   return filtered_data
 }
 
+function styleFeature(feature) {
+  // Set the styles and properties of features
+  var regionName = feature.getProperty('regionName')
+  var regionLevel = feature.getProperty('regionLevel')
+  console.log('Setting styles for region: ', regionLevel, regionName)
+  // Set the styles
+  var color = regionLevel == 'eer' ? 'gray' : 'red'
+  var opacity = regionLevel == 'eer' ? 0.3 : 0.5
+  var zIndex = regionLevel == 'eer' ? 0 : 1
+  return ({
+    visible: true,
+    fillColor: color,
+    fillOpacity: opacity,
+    strokeWeight: 0,
+    zIndex: zIndex
+  });
+}
+
+function setFeatureProperties(feature, mep_location_map, set_global=false) {
+  var regionName = feature.getProperty('eer18nm') || feature.getProperty('ctyua17nm')
+  var regionLevel = feature.getProperty('eer18nm') ? 'eer' : 'county'
+
+  // Get the location keys that are relevant to this region (ie. UK, Ireland, etc.)
+  var keys = Object.keys(mep_location_map).filter(i => regionName.includes(i))
+  if ((regionLevel == 'eer') || (keys.length)){
+    keys = keys.concat(['UK'])
+  }
+
+  // Get the meps for this region
+  var region_meps = []
+  for (var key of keys) {
+    region_meps = region_meps.concat(mep_location_map[key] || [])
+  }
+
+  // Get the text for these MEPS
+  var infoContent = region_meps.map(mep => getMepText(mep)).join('<hr />')
+  if (infoContent) { 
+    infoContent = "<h6>Online listings for region: " + regionName + "</h6><hr />" + infoContent
+  } else {
+    if (set_global) {
+      console.log("Removing region from map", regionLevel, regionName)
+      map.data.remove(feature)
+    } else {
+      map.data.overrideStyle(feature, {
+        visible: false,
+      });
+    }
+    return null;
+  }
+  // Add this to the global list of regions
+  if (set_global) {
+    region_features.push(feature)
+  }
+  console.log("Setting properties for region", regionLevel, regionName)
+  feature.setProperty('regionLevel', regionLevel)
+  feature.setProperty('regionName', regionName)
+  feature.setProperty('infoContent', infoContent)
+
+  map.data.overrideStyle(feature, styleFeature(feature));
+}
+
+function setFeaturePropertiesAndStyles(features, mep_location_map, set_global=false) {
+  for (var feature of features) {
+    setFeatureProperties(feature, mep_location_map, set_global)
+  }
+}
+
+function loadRegionFeatures(mep_location_map) {
+  if (region_features.length) { 
+    setFeaturePropertiesAndStyles(region_features, mep_location_map, false)
+    return null
+  }
+  console.log("Loading Region GIS data", region_features)
+  // Load the EER and County regions (if not already loaded)
+  map.data.loadGeoJson('/assets/geojson/uk_eer_geo.json', null, function(features) {
+    setFeaturePropertiesAndStyles(features, mep_location_map, true)
+  });
+  map.data.loadGeoJson('/assets/geojson/uk_county_geo.json', null, function(features) {
+    setFeaturePropertiesAndStyles(features, mep_location_map, true)
+  });
+}
+
 function plotRegions(data) {
+  data = data || raw_data;
   console.log("Plotting regions for items with no address")
   infowindow = new google.maps.InfoWindow({ content: 'holding...' });
 
@@ -91,68 +190,12 @@ function plotRegions(data) {
   // construct a map of the online sellers
   var mep_location_map = {}
   for (var mep of meps) {
-    if (!(mep.location in mep_location_map)) {
-      mep_location_map[mep.Location] = []
-    }
+    mep_location_map[mep.Location] = mep_location_map[mep.Location] || []
     mep_location_map[mep.Location].push(mep)
   }
   console.log('Got region map: ', mep_location_map)
 
-  // Load the EER and County regions
-  map.data.loadGeoJson(
-    '/assets/geojson/uk_eer_geo.json'
-  );
-  map.data.loadGeoJson(
-    '/assets/geojson/uk_county_geo.json'
-  );
-
-  // Set the styles and properties of regions
-  map.data.setStyle(function(feature) {
-    var regionName = feature.getProperty('eer18nm') || feature.getProperty('ctyua17nm')
-    var regionLevel = feature.getProperty('eer18nm') ? 'eer' : 'county'
-  
-    // Get the meps for this region from the mep_location_map
-    var keys = Object.keys(mep_location_map).filter(i => regionName.includes(i))
-    if ((regionLevel == 'eer') || (keys.length)){
-      keys = keys.concat(['UK'])
-    }
-    if (keys.length) { console.log(' - Relevant keys', keys) }
-
-    // Get the meps for this region
-    var region_meps = []
-    for (var key of keys) {
-      region_meps = region_meps.concat(mep_location_map[key])
-    }
-    if (region_meps.length) { console.log(' - MEPS', region_meps) }
-
-    // Get the text for these MEPS
-    var infoContent = region_meps.map(mep => getMepText(mep)).join('<hr />')
-    if (infoContent) { 
-      infoContent = "<h6>Online listings for region: " + regionName + "</h6><hr />" + infoContent
-      console.log(' - info', infoContent) 
-    } else {
-      console.log('Removing region from map', regionLevel, regionName)
-      return ({
-        visible: false
-      })
-    }
-
-    console.log('Setting properties and styles for region: ', regionLevel, regionName)
-    // Set the properties for this feature    
-    feature.setProperty('regionName', regionName)
-    feature.setProperty('regionLevel', regionLevel)
-    feature.setProperty('infoContent', infoContent)
-    // Set the styles
-    var color = regionLevel == 'eer' ? 'gray' : 'red'
-    var opacity = regionLevel == 'eer' ? 0.3 : 0.5
-    var zIndex = regionLevel == 'eer' ? 0 : 1
-    return ({
-      fillColor: color,
-      fillOpacity: opacity,
-      strokeWeight: 0,
-      zIndex: zIndex
-    });
-  });
+  loadRegionFeatures(mep_location_map)
 
   // Toggle on click
   map.data.addListener('click', function(event) {
@@ -183,6 +226,7 @@ function plotRegions(data) {
 }
 
 function plotMarkers(data) {
+  data = data || raw_data;
   // Get only the MEPs with lat/lng keys
   var meps = (data || []).filter(o => ("lat" in o))
   console.log("MEP data with lat/lng for markers", meps)
@@ -200,7 +244,7 @@ function initMepMap() {
   // The location of the UK
   var uk = {lat: 54.3781, lng: -3.4360};
   var mapOptions = {
-    zoom: 6,
+    zoom: 7,
     center: uk,
   };
 
@@ -211,8 +255,9 @@ function initMepMap() {
 
   // Load the data and plot the markers and regions
   $.getJSON("/mep/data.json", function(data) {
+    raw_data = data;
     plotMarkers(data);
-    plotRegions(data);
+    plotRegions(data, setGlobalVis=true);
   })
 }
 

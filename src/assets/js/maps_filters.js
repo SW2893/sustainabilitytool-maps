@@ -1,12 +1,20 @@
 var current_filters;
 
-var exclude_keywords = [
-  'name', 'host', 'logo', 'website', 'location',
-  'address', 'town', 'postcode', 'county', 'country', 'lat', 'lng', 'place'
+var exclude_include_keywords = [
+  'address', 'place'
+]
+var exclude_exact_keywords = [
+  'name', 'host', 'logo', 'website', 'location', 'town', 
+  'postcode', 'county', 'country', 'lat', 'lng'
 ]
 
 function useKey(key) {
-  for (kw of exclude_keywords) {
+  for (kw of exclude_exact_keywords) {
+    if (key.toLowerCase() == kw) {
+      return false
+    }
+  }
+  for (kw of exclude_include_keywords) {
     if (key.toLowerCase().includes(kw)) {
       return false
     }
@@ -64,6 +72,9 @@ function add_filter(key, values) {
 
     clearMarkers()
     plotMarkers()
+
+    clearRegions()
+    plotRegions()
   });
 }
 
