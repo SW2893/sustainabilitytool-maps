@@ -32,7 +32,7 @@ function create_filters(data) {
 
 function add_filter(key, values) {
   var id_key = key.replace(/\?/gi, "_q").replace(/\s/gi, "_")
-  console.log("Setting up filter UI for", key, id_key, values)
+  //console.log("Setting up filter UI for", key, id_key, values)
 
   var text = "<div class='col-sm-3'><label class='map-filter-label'>" + key + "</label>"
   text += "<select class='map-filter' id='" + id_key + "' name='" + id_key + "[]' multiple='multiple'>"
@@ -63,7 +63,7 @@ function add_filter(key, values) {
     console.log( "Current filters", current_filters);
 
     clearMarkers()
-    plotMeps()
+    plotMarkers()
   });
 }
 
