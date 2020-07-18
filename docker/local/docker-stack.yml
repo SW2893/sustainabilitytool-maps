@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+     #- ./nginx/certs:/etc/ssl/certs
+     #- ./nginx/cache:/var/cache/nginx
+     - ./nginx/conf.d:/etc/nginx/conf.d
+     #- /docker-volumes/etc/letsencrypt:/etc/letsencrypt
+     #- /docker-volumes/data/letsencrypt:/data/letsencrypt
+     - ../../src:/var/www/site/
+     #- /mnt/head/log:/var/log

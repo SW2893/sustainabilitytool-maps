@@ -1,0 +1,16 @@
+listen 80;
+listen [::]:80;
+
+location / {
+    return 301 https://$host$request_uri;
+}
+
+for certbot challenges (renewal process)
+location ^~ /.well-known/acme-challenge/ {
+    allow all;
+    root /data/letsencrypt;
+}
+
+location = /.well-known/acme-challenge/ {
+    return 404;
+}

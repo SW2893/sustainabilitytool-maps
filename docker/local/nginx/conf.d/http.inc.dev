@@ -1,0 +1,6 @@
+listen 80;
+listen [::]:80;
+
+location / {
+    root /var/www/site;
+}

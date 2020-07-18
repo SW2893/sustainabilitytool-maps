@@ -1,0 +1,26 @@
+.main-wrapper {
+  height: 100vh;
+}
+
+.map-container {
+  height: 95%;
+}
+
+.footer-container {
+  height: 10px;
+}
+
+#map-canvas {
+  height: 100%;
+  width: 100%;
+}
+
+.map-filter {
+  width: 100%;
+}
+
+.map-filter-label {
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+}
