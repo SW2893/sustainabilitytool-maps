@@ -63,8 +63,8 @@ def geocode_row(row_data, index):
 
     address = (row_data.get('Address Line 1', "") + ", " + row_data.get('Address Line 2', "")).strip(' ,')
     if address:
-        address = f"{address}, {row_data['Town']}, {row_data['County']} {row_data['Postcode']}, {row_data['Country']}".strip(' ,')
-        address = address.replace(" ", "+")
+        address = f"{address}, {row_data['Town']}, {row_data['County']} {row_data['Postcode']}, {row_data['Country']}, UK".strip(' ,')
+        address = address.replace(" ", "+").replace('&', '%26')
 
         url = f"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={API_KEY}"
         response = request.urlopen(url)
@@ -75,12 +75,12 @@ def geocode_row(row_data, index):
 
         if response_data.get("status") == "OK":
             if len(response_data["results"]) > 1:
-                logger.warning(f"More than one result from geocoding row {index} in response data: {response_data}")
+                logger.warning(f"More than one result from geocoding row {index} with address: {address}.  Response data: {response_data}")
             result = response_data["results"][0]
             details = result["geometry"]["location"]
             details.update({'place_id': result.get("place_id", None)})
 
-            logger.info(f"Got geocode details from row {index}: {details}")
+            logger.info(f"Got geocode details from row {index} [{address}]: {details}")
             row_data.update(details)
         else:
             logger.info(f"Error with geocoding row {index}. Status: {response_data.get('status')}")

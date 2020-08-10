@@ -23,9 +23,11 @@
 
     <div class="main-wrapper">
 
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <nav class="navbar navbar-expand-lg navbar-light bg-white p-0 m-0">
 
-        <a class="navbar-brand" href="#">GIS | SupplyChainSchool</a>
+        <a class="navbar-brand" href="#">
+          <img src="/assets/logo/logo.svg" alt="GIS | SupplyChainSchool" height="80"/>
+        </a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -33,12 +35,12 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="https://www.supplychainschool.co.uk">Home</a>
+            <li class="nav-item text-sps">
+              <a class="nav-link text-sps" href="https://www.supplychainschool.co.uk">Home</a>
             </li>
 
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <li class="nav-item text-sps dropdown">
+              <a class="nav-link text-sps dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Maps
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -51,10 +53,12 @@
       </nav>
 
       <div class="container-fluid">
-        <span class="caret"></span>
-        <a class="text-dark collapsed" data-toggle="collapse" data-target="#collapseExampleArea" href="#collapseExampleArea" aria-expanded="false">
-          <label class="map-filter-label">Filters:</label>
-        </a>
+          <a class="btn btn-sm btn-primary collapsed mt-1 mb-1" data-toggle="collapse" data-target="#collapseExampleArea" href="#collapseExampleArea" aria-expanded="false">
+            <span class="map-filter-label">Advanced Search:</span>
+          </a> 
+          <small class="text-secondary">Click to show and apply filters.</small>
+          <small class="text-secondary">Click on a region to show MEP's servicing that area online, or markers for MEPs with physical addresses.</small>
+          <small class="text-secondary">Red = Buy and Sell, Blue = Sell/donate only, Green = Buy only.</small>
         <div id="collapseExampleArea" class="collapse">
           <div class="row map-filters"></div>
         </div>
@@ -82,7 +86,7 @@
 
     <!-- NOTE: Set correct API key here -->
     <script
-      src="https://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyBlEnBOIuQPNEqd8f9SZ7lc7yi7egnKCyw">
+      src="https://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyDQqW9KUbhwProSNA2nQ3MV0MeYQ6WUS_g">
     </script>
     <script src="/assets/js/maps_mep.js"></script>
     <script src="/assets/js/maps_filters.js"></script>

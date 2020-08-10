@@ -1,7 +1,7 @@
 var current_filters;
 
 var exclude_include_keywords = [
-  'address', 'place'
+  'address', 'place', 'marker', 'colour'
 ]
 var exclude_exact_keywords = [
   'name', 'host', 'logo', 'website', 'location', 'town', 

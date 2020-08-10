@@ -36,3 +36,7 @@
 [data-toggle="collapse"].collapsed:after {
   transform: rotate(0deg) ;
 }
+
+.text-sps {
+  color: #212529 !important;
+}
