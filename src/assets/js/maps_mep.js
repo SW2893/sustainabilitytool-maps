@@ -94,7 +94,7 @@ function addMarker(mep) {
       title: mep.name,
       content: getMepText(mep),
       icon: {
-        url: `http://maps.google.com/mapfiles/ms/icons/${colour}-dot.png`
+        url: `https://maps.google.com/mapfiles/ms/icons/${colour}-dot.png`
       }
   });
 
