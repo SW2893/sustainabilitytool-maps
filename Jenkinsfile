@@ -31,7 +31,7 @@ pipeline {
             } else {
                 env.S3_BUNDLE_PATH = '/latest/'
             }
-            env.S3_BUNDLE_PATH = "maps.sustainabilitytool.com${S3_BUNDLE_PATH}"
+            env.S3_BUNDLE_PATH = "maps.supplychainschool.co.uk${S3_BUNDLE_PATH}"
         }
         echo "Uploading files to ${S3_BUNDLE_PATH}"
         withAWS(region: 'eu-west-2', credentials: 'docker_euwest2') {
