@@ -94,7 +94,7 @@ counter = 1
 data = []
 for row in rows:
     counter += 1
-    row_data = {headings[i]: row[i].strip() for i in valid_columns}
+    row_data = {headings[i]: row[i].strip() for i in valid_columns if i < len(row)}
     row_data = geocode_row(row_data, counter)
     data.append(row_data)
 
