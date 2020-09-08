@@ -53,10 +53,40 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 	}
 }
 
+function getContentString(include_keys, exclude_keys, parsed_meps, include_title=true, section_title="", section_class="") {
+
+  content_string = section_title ? "<b>" + section_title + "</b>: <br/>" : ""
+  content_string += "<div class='" + section_class + "'>"
+  content_string = ""
+  for (var key of include_keys) {
+    if (exclude_keys.includes(key)) { continue; }
+    var value = parsed_meps[key]
+    if (!value) { continue }
+    if (key == "Host" && value == parsed_meps["Name"]) { continue }
+    var value_str = (typeof value == "string" ? value : JSON.stringify(value)).trim()
+    if (!value_str) { continue; }
+    if (key == "Name") {
+      value_str = "<b>" + value_str + "</b>"
+    }
+    content_string += include_title ? "<b>" + key + "</b>: " : ""
+    content_string += value_str + "<br/>"
+  }
+  if (!content_string) {
+    return content_string
+  }
+  // Wrap in a div and give a header
+  content_string = "<div class='" + section_class + "'>" + content_string + "</div>"
+  content_string = (section_title ? "<b>" + section_title + "</b>: <br/>" : "") + content_string
+  return content_string
+}
+
 function getMepText(mep) {
   var content_string = ""
+  var exclude_keys = ["color", "colour", "lat", "lng", "place_id", "location"]
+
+  parsed_meps = {}
   for (var [key, value] of Object.entries(mep)) {
-    if (key == "lat" || key == "lng" || key == "place_id") { continue; }
+    if (exclude_keys.includes(key.toLowerCase())) { continue; }
     var parsed_key = key.replace("_", " ")
     var value_str = (typeof value == "string" ? value : JSON.stringify(value)).trim()
     if (!value_str) { continue; }
@@ -64,8 +94,21 @@ function getMepText(mep) {
     if (parsed_key == "Website") {
       value_str = "<a href='" + value_str + "' target='_blank'>" + value_str + "</a>"
     }
-    content_string += "<b>" + parsed_key + "</b>: " + value_str + "<br/>"
+    parsed_meps[key] = value_str
   }
+  console.log("PARSED MEP DATA FOR INFO", parsed_meps)
+
+  var header_keys = ["Name", "Host", "Website"]
+  var address_keys = ["Address Line 1", "Address Line 2", "Town", "Postcode", "Country"]
+  content_string = getContentString(header_keys, [], parsed_meps, false)
+  content_string += getContentString(
+      Object.keys(parsed_meps),
+      header_keys + address_keys + ["Location", "County"],
+      parsed_meps,
+      true, "", "mt-2 mb-2"
+  )
+  content_string += getContentString(address_keys, [], parsed_meps, false, "Address", "ml-3 float-left")
+
   // Add a link to the directions
   if ((mep.lat) && (mep.lng)) {
     lat_lng = (mep.lat || "") + "," + (mep.lng || "")
