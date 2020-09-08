@@ -30,7 +30,7 @@ function clearRegions() {
 }
 
 function distance(lat1, lon1, lat2, lon2, unit) {
-  /* Distance between two points given latitude and longitude 
+  /* Distance between two points given latitude and longitude
   */
 	if ((lat1 == lat2) && (lon1 == lon2)) {
 		return 0;
@@ -159,7 +159,7 @@ function setFeatureProperties(feature, mep_location_map, set_global=false) {
 
   // Get the text for these MEPS
   var infoContent = region_meps.map(mep => getMepText(mep)).join('<hr />')
-  if (infoContent) { 
+  if (infoContent) {
     infoContent = "<h6>Online listings for region: " + regionName + "</h6><hr />" + infoContent
   } else {
     if (set_global) {
@@ -190,8 +190,65 @@ function setFeaturePropertiesAndStyles(features, mep_location_map, set_global=fa
   }
 }
 
+function setCountySelector(features) {
+  console.log("GOT COUNTIES FEATURES", features)
+  var county_map = features.reduce((acc, feature) => {return Object.assign(acc, {
+    [feature.getProperty('ctyua17cd')]: {
+      'name': feature.getProperty('ctyua17nm'),
+      'lat': feature.getProperty('lat'),
+      'lng': feature.getProperty('long'),
+      'st_lengths': feature.getProperty('st_lengths')
+    }
+  })}, {})
+  console.log("GOT COUNTY MAP", county_map)
+
+  // Add this to the selection filter
+  var key = "County"
+  var id_key = "counties"
+  var text = "<div class='col-sm-12'><label class='map-filter-label'>Within 30km of county:<small>(<a href='#' id='clearcounty'>clear</a>)</small></label>"
+  text += "<select class='map-filter' id='" + id_key + "' name='" + id_key + "[]'>"
+  for (var [code, values] of Object.entries(county_map)) {
+    text += "<option value='" + code + "'>" + values['name'] + "</option>"
+  }
+  text += "</select></div>"
+
+  $(".county-select").append(text)
+  $("#" + id_key).select2({
+    'width': '100%'
+  });
+  $('#' + id_key).val(null).trigger('change');
+
+  $("#" + id_key).change(function(event) {
+    var selected_options = event.target.selectedOptions || []
+    var selected_values = []
+    for (var o of selected_options) {
+      selected_values.push(o.value)   // Grab the actual option text
+    }
+    console.log( "Handler for .change() on counties called", id_key, key, selected_values);  //, event, selected_options
+    if (selected_values.length) {
+      var code = selected_values[0]
+      var details = county_map[code]
+
+      console.log("Centering map and zooming on", details)
+      map.setCenter({lat: details['lat'], lng: details['lng']})
+      map.setZoom(11)
+    } else {
+      map.setZoom(7)
+      map.setCenter({lat: 54.3781, lng: -3.4360})
+    }
+  });
+
+  $("#clearcounty").click(function(event) {
+    console.log("Clearing county selection");  //, event, selected_options
+    $('#' + id_key).val(null).trigger('change');
+    map.setZoom(7)
+    map.setCenter({lat: 54.3781, lng: -3.4360})
+  });
+
+}
+
 function loadRegionFeatures(mep_location_map) {
-  if (region_features.length) { 
+  if (region_features.length) {
     setFeaturePropertiesAndStyles(region_features, mep_location_map, false)
     return null
   }
@@ -201,6 +258,7 @@ function loadRegionFeatures(mep_location_map) {
     setFeaturePropertiesAndStyles(features, mep_location_map, true)
   });
   map.data.loadGeoJson('/assets/geojson/uk_county_geo.json', null, function(features) {
+    setCountySelector(features)
     setFeaturePropertiesAndStyles(features, mep_location_map, true)
   });
 }
@@ -231,7 +289,7 @@ function plotRegions(data) {
   map.data.addListener('click', function(event) {
     var feat = event.feature
     console.log("Clicked event", feat)
-    
+
     // Pop up an infoWindow with the online suppliers
     infowindow.setContent(feat.getProperty('infoContent'));
     infowindow.setPosition(event.latLng);

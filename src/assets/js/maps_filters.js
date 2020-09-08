@@ -4,7 +4,7 @@ var exclude_include_keywords = [
   'address', 'place', 'marker', 'colour'
 ]
 var exclude_exact_keywords = [
-  'name', 'host', 'logo', 'website', 'location', 'town', 
+  'name', 'host', 'logo', 'website', 'location', 'town',
   'postcode', 'county', 'country', 'lat', 'lng'
 ]
 
@@ -99,5 +99,5 @@ $(document).ready(function() {
     filter_buttons += "</div>"
     $(".map-filters").append(filter_buttons)
   })
-
+  
 });
