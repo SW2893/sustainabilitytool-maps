@@ -3,5 +3,6 @@
     "description": "Location and details Material Exchange Platforms around the UK",
     "heading_map": {
         "Material Exchange Platform (MEP)": "Name"
-    }
+    },
+    "search_tips": "Click to show and apply filters. Click on a region to show MEP's servicing that area online, or markers for MEPs with physical addresses. Red = Buy and Sell, Blue = Sell/donate only, Green = Buy only."
 }

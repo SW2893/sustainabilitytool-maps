@@ -27,4 +27,11 @@
 
     </ul>
   </div>
+
+  {% if config %}
+  <span class="navbar-text mr-3">
+    {{ config.title }}
+  </span>
+  {% endif %}
+
 </nav>

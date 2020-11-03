@@ -2,3 +2,6 @@
 **/package-lock.json
 dist/*
 !dist/.gitkeep
+**/index.html
+**/data.json
+**/__pycache__/*

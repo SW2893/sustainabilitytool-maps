@@ -2,14 +2,15 @@ pipeline {
   agent { dockerfile true }
 
   environment {
-    GM_API_KEY = credentials('google-maps-DEV-api-key')
+    GM_API_KEY_DEV = credentials('google-maps-DEV-api-key')
+    GM_API_KEY = credentials('google-maps-PROD-api-key')
     HOME = '.'
   }
 
   stages {
     stage('Geocode the data') {
       steps {
-        sh 'cd src && python parse.py'
+        sh 'cd src && python build.py'
       }
     }
 
@@ -32,7 +33,7 @@ pipeline {
         echo "Uploading files to ${S3_BUNDLE_PATH}"
         withAWS(region: 'eu-west-2', credentials: 'docker_euwest2') {
           s3Delete(bucket:'procedural-frontend-bundles', path:"${S3_BUNDLE_PATH}")
-          s3Upload(file: 'dist/', bucket:'procedural-frontend-bundles', path:"${S3_BUNDLE_PATH}")
+          s3Upload(file: 'src/', bucket:'procedural-frontend-bundles', path:"${S3_BUNDLE_PATH}")
         }
       }
     }

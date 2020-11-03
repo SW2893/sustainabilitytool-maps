@@ -6,6 +6,9 @@ from jinja2 import Template, Environment, FileSystemLoader, select_autoescape
 import os
 import glob
 import json
+import sys
+
+from parse import parse_csv
 
 
 def read_config(folder_name):
@@ -17,7 +20,9 @@ def read_config(folder_name):
         config = json.load(f)
     return config
 
+
 if __name__ == "__main__":
+
     # Setup the template environment
     env = Environment(
         loader=FileSystemLoader('./templates'),
@@ -29,12 +34,27 @@ if __name__ == "__main__":
     configs = {fn.strip("/."): read_config(fn) for fn in folder_names if read_config(fn)}
 
     # Get the build context
+    API_KEY = os.environ.get('GM_API_KEY')
+    API_KEY_DEV = os.environ.get('GM_API_KEY_DEV')
     context = {
-        'GM_API_KEY': os.environ.get('GM_API_KEY'),
+        'GM_API_KEY': API_KEY,
         "map_configs": configs
     }
-    print("USING CONTEXT", json.dumps(context, indent=4))
+    print("BUILDING WITH CONTEXT")
+    print(json.dumps(context, indent=4))
 
     # Build the home index.html
-    template = env.get_template('home.html')
-    template.stream(context).dump("index.html")
+    env.get_template('home.html').stream(context).dump("index.html")
+
+    # Build each of the home folders
+    for dir_name, config in configs.items():
+
+        # Make the data.json file
+        if len(sys.argv) <= 1:
+            parse_csv(f"{dir_name}/data.csv", config, API_KEY_DEV)
+
+        # Get the template context
+        context.update({"config": config})
+
+        # Render the template to an index.html
+        env.get_template('map.html').stream(context).dump(f"{dir_name}/index.html")

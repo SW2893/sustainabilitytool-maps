@@ -2,6 +2,28 @@
 
 {% block body %}
 
-Here is some content for the body
+<div class="container">
+
+<div class="row">
+  <div class="col w-100">
+    <p>Welcome to the SupplyChainSchool GIS mapping pages.</p>
+    <p>The following pages contain links to GIS data collated by the SupplyChainSchool and their partners.</p>
+  </div>
+</div>
+
+{% for key, config in map_configs.items() %}
+  <div class="row mb-3">
+    <div class="card w-100">
+      <div class="card-body">
+        <h4 class="card-title">
+          <a class="text-secondary" href="/{{ key }}/index.html">{{ config.title }}</a>
+        </h4>
+        {{ config.description }}
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+</div>
 
 {% endblock %}
