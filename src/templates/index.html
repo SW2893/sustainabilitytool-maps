@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Maps|SupplyChainSchool</title>
+    <meta name="description" content="GIS Data Explorer for SupplyChainSchool.co.uk">
+    <meta name="author" content="www.procedural.build">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/css/main.css">
+
+  </head>
+
+  <body>
+
+    <div class="main-wrapper">
+
+      <nav class="navbar navbar-expand-lg navbar-light bg-white p-0 m-0">
+
+        <a class="navbar-brand" href="#">
+          <img src="/assets/logo/logo.svg" alt="GIS | SupplyChainSchool" height="80"/>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item text-sps">
+              <a class="nav-link text-sps" href="https://www.supplychainschool.co.uk">Home</a>
+            </li>
+
+            <li class="nav-item text-sps dropdown">
+              <a class="nav-link text-sps dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Maps
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Material Exchange Platforms (MEPs)</a>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </nav>
+
+      <div class="container-fluid">
+          <a class="btn btn-sm btn-primary collapsed mt-1 mb-1" data-toggle="collapse" data-target="#collapseExampleArea" href="#collapseExampleArea" aria-expanded="false">
+            <span class="map-filter-label">Advanced Search:</span>
+          </a>
+          <small class="text-secondary">Click to show and apply filters.</small>
+          <small class="text-secondary">Click on a region to show MEP's servicing that area online, or markers for MEPs with physical addresses.</small>
+          <small class="text-secondary">Red = Buy and Sell, Blue = Sell/donate only, Green = Buy only.</small>
+        <div id="collapseExampleArea" class="collapse">
+          <div class="row county-select"></div>
+          <hr />
+          <div class="row map-filters"></div>
+        </div>
+      </div>
+
+      <div class="container-fluid map-container">
+        <div class="row h-100">
+          <div id="map-canvas"></div>
+        </div>
+      </div>
+
+      <div class="container-fluid footer-container">
+        <footer class="row text-right">
+          <small>&copy;2020 SupplyChainSchool.co.uk</small>
+        </footer>
+      </div>
+
+  </div>
+
+    <!-- JAVASCRIPT: Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" integrity="sha384-1CmrxMRARb6aLqgBO7yyAxTOQE2AKb9GfXnEo760AUcUmFx3ibVJJAzGytlQcNXd" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+    <!-- NOTE: Set correct API key here -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyDedPB5hIKc2IN575gjqdO1-Pql1o3_uB8">
+    </script>
+    <script src="/assets/js/maps_mep.js"></script>
+    <script src="/assets/js/maps_filters.js"></script>
+
+  </body>
+
+</html>
