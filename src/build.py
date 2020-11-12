@@ -46,7 +46,10 @@ if __name__ == "__main__":
     # Build the home index.html
     env.get_template('home.html').stream(context).dump("index.html")
 
-    # Build each of the home folders
+    # Build the admin index.html
+    env.get_template('admin.html').stream(context).dump("admin/index.html")
+
+    # Build each of the map folders
     for dir_name, config in configs.items():
 
         # Make the data.json file

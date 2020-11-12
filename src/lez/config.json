@@ -1,4 +1,15 @@
 {
     "title": "Low Emissions Zone",
-    "description": "Location and details of Low Emission Zones around the UK"
+    "description": "Location and details of Low Emission Zones around the UK",
+    "thumbnail": "/lez/thumbnail.png",
+    "preamble": "<p>Preamble text to go here</p><p>This is a second paragraph</p>",
+    "search_tips": "Here is a search tip for LEZ maps",
+    "search": {
+        "include_fields": ["", ""],
+        "exclude_fields": ["", ""]
+    },
+    "infobox": {
+        "include_fields": ["", ""],
+        "exclude_fields": ["", ""]
+    }
 }
