@@ -81,7 +81,7 @@ function add_filter(key, values) {
 // In your Javascript (external .js resource or <script> tag)
 $(document).ready(function() {
 
-  $.getJSON("/mep/data.json", function(data) {
+  $.getJSON("./data.json", function(data) {
     // Filter only MEPs with lat/lng
     //var meps = (data || []).filter(o => ("lat" in o))
     var meps = (data || [])

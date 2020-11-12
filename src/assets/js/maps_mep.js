@@ -248,7 +248,7 @@ function setCountySelector(features) {
   // Add this to the selection filter
   var key = "County"
   var id_key = "counties"
-  var text = "<div class='col-sm-12'><label class='map-filter-label'>Within 30km of county:<small>(<a href='#' id='clearcounty'>clear</a>)</small></label>"
+  var text = "<div class='col-sm-12'><label class='map-filter-label'>Search by county or location:<small>(<a href='#' id='clearcounty'>clear</a>)</small></label>"
   text += "<select class='map-filter' id='" + id_key + "' name='" + id_key + "[]'>"
   for (var [code, values] of Object.entries(county_map)) {
     text += "<option value='" + code + "'>" + values['name'] + "</option>"
@@ -385,7 +385,7 @@ function initMepMap() {
   );
 
   // Load the data and plot the markers and regions
-  $.getJSON("/mep/data.json", function(data) {
+  $.getJSON("./data.json", function(data) {
     raw_data = data;
     plotMarkers(data);
     plotRegions(data, setGlobalVis=true);
