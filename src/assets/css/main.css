@@ -25,6 +25,10 @@
   font-weight: bold;
 }
 
+.navbar-light {
+  background-color: "#f5f5f5";
+}
+
 /* PURE css solution for rotating carets based on expanded section */
 
 [data-toggle="collapse"]:after {

@@ -1,6 +1,7 @@
 {
     "title": "Material Exchange Platforms (MEPs)",
     "description": "Location and details Material Exchange Platforms around the UK",
+    "thumbnail": "/mep/thumbnail.png",
     "heading_map": {
         "Material Exchange Platform (MEP)": "Name"
     },

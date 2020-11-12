@@ -78,26 +78,45 @@ function add_filter(key, values) {
   });
 }
 
+function apply_filters(data, config) {
+  // 
+  filters = create_filters(data)
+
+  // Clear the filters element to get started from scratch
+  $(".map-filters").empty()
+
+  // Add the dropdown filter selections
+  for (var [key, values] of Object.entries(filters)) {
+    add_filter(key, values);
+  }
+
+  // Add a clear and submit button
+  var filter_buttons = "<div class='col-sm-12 mb-2 text-right'>"
+  //filter_buttons += "<button id='clear-filters' class='btn btn-sm btn-secondary'>Clear</button>"
+  //filter_buttons += "<button id='submit-filters' class='btn btn-sm btn-primary'>Apply</button>"
+  filter_buttons += "</div>"
+  $(".map-filters").append(filter_buttons)
+}
+
 // In your Javascript (external .js resource or <script> tag)
 $(document).ready(function() {
+  // Initialize the data
+  var config = {}
+  var data = {}
 
-  $.getJSON("./data.json", function(data) {
-    // Filter only MEPs with lat/lng
-    //var meps = (data || []).filter(o => ("lat" in o))
-    var meps = (data || [])
-    filters = create_filters(meps)
-
-    // Add the dropdown filter selections
-    for (var [key, values] of Object.entries(filters)) {
-      add_filter(key, values);
-    }
-
-    // Add a clear and submit button
-    var filter_buttons = "<div class='col-sm-12 mb-2 text-right'>"
-    //filter_buttons += "<button id='clear-filters' class='btn btn-sm btn-secondary'>Clear</button>"
-    //filter_buttons += "<button id='submit-filters' class='btn btn-sm btn-primary'>Apply</button>"
-    filter_buttons += "</div>"
-    $(".map-filters").append(filter_buttons)
+  $when(
+    $.getJSON("./config.json", function(_data) {
+      console.log("Loaded config.json", _data)
+      config = (_data || {})
+    }),
+    $.getJSON("./data.json", function(_data) {
+      console.log("Loaded data.json", _data)
+      // Filter only MEPs with lat/lng
+      //data = (_data || []).filter(o => ("lat" in o))
+      data = (_data || [])
+    })
+  ).then(function() {
+    apply_filters(data, config)
   })
-  
+
 });

@@ -2,16 +2,12 @@
 
 {% block body %}
 
-  <div class="main-wrapper">
-
-    {% include "search.html" %}
-
-    <div class="container-fluid map-container">
-      <div class="row h-100">
-        <div id="map-canvas"></div>
-      </div>
-    </div>
-
+  <div class="container-fluid">
+    {{ config.preamble|safe }}
   </div>
+
+  {% include "search.html" %}
+
+  <div id="map-canvas" class="flex-fill"></div>
 
 {% endblock %}

@@ -1,15 +1,13 @@
 {
-    "title": "Low Emissions Zone",
-    "description": "Location and details of Low Emission Zones around the UK",
+    "title": "Clean Air Zones",
+    "description": "This map provides detailed information about the UK Clean Air and Low Emission Zones. All Clean Air and Low Emission Zones are either active of planned to be active and have had a written statement by a leading body (e.g. Council website page).",
     "thumbnail": "/lez/thumbnail.png",
-    "preamble": "<p>Preamble text to go here</p><p>This is a second paragraph</p>",
-    "search_tips": "Here is a search tip for LEZ maps",
+    "search_tips": "",
+    "preamble": "<p>The Plant Category Group established the need to know which UK Councils and regions have Clean Air Zones (CAZ) or Low Emissions Zones (LEZ), or are planning them. This map provides detailed information about the UK Clean Air and Low Emission Zones. All Clean Air and Low Emission Zones are either active of planned to be active and have had a written statement by a leading body (e.g. Council website page).</p><p>Action Sustainability and the Supply Chain Sustainability School are not rating, scoring, providing opinion or assessing the Clean Air Zones displayed. All the information provided is from information found within the public domain.</p>",
     "search": {
-        "include_fields": ["", ""],
-        "exclude_fields": ["", ""]
+        "include_fields": ["Status"]
     },
     "infobox": {
-        "include_fields": ["", ""],
-        "exclude_fields": ["", ""]
+        "exclude_fields": []
     }
 }

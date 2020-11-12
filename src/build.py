@@ -47,14 +47,13 @@ if __name__ == "__main__":
     env.get_template('home.html').stream(context).dump("index.html")
 
     # Build the admin index.html
-    env.get_template('admin.html').stream(context).dump("admin/index.html")
+    env.get_template('admin.html').stream(context).dump("admins/index.html")
 
-    # Build each of the map folders
+    # Build each of the map folders (in order of folder name alphabetically)
     for dir_name, config in configs.items():
-
         # Make the data.json file
-        if len(sys.argv) <= 1:
-            parse_csv(f"{dir_name}/data.csv", config, API_KEY_DEV)
+        #if len(sys.argv) <= 1:
+        #    parse_csv(f"{dir_name}/data.csv", config, API_KEY_DEV)
 
         # Get the template context
         context.update({"config": config})
