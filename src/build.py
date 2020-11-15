@@ -52,8 +52,8 @@ if __name__ == "__main__":
     # Build each of the map folders (in order of folder name alphabetically)
     for dir_name, config in configs.items():
         # Make the data.json file
-        #if len(sys.argv) <= 1:
-        #    parse_csv(f"{dir_name}/data.csv", config, API_KEY_DEV)
+        if len(sys.argv) <= 1:
+            parse_csv(f"{dir_name}/data.csv", config, API_KEY_DEV)
 
         # Get the template context
         context.update({"config": config})
