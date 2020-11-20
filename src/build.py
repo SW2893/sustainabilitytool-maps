@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 '''
 Main script for parsing all of the folder and building the index.html pages
 '''
