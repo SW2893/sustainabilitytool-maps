@@ -7,8 +7,8 @@
     },
     "search_tips": "Click to show and apply filters. Click on a region to show MEP's servicing that area online, or markers for MEPs with physical addresses. Red = Buy and Sell, Blue = Sell/donate only, Green = Buy only.",
     "search": {
-      "exclude_fields": ["address", "place", "marker", "colour"],
-      "exclude_fields_containing": ["name", "host", "logo", "website", "location", "town", "postcode", "county", "country", "lat", "lng"]
+      "exclude_fields": ["address", "place", "marker", "colour", "place_id"],
+      "exclude_fields_containing": ["address", "name", "host", "logo", "website", "location", "town", "postcode", "county", "country", "lat", "lng"]
     },
     "infobox": {
       "exclude_fields": ["color", "colour", "lat", "lng", "place_id", "location", "polygon"]

@@ -150,7 +150,7 @@ function addMarker(mep) {
         url: `https://maps.google.com/mapfiles/ms/icons/${colour}-dot.png`
       }
   });
-  bounds.extend(marker);
+  bounds.extend(marker.getPosition());
 
   // Add a listener to show the content on click
   google.maps.event.addListener(marker, 'click', function() {

@@ -7,7 +7,7 @@ function shouldUseKey(key) {
   var search_config = (_config.search || {})
   var _key = key.toLowerCase()
   var include_fields = new Set(search_config.include_fields|| [])
-  if (include_fields) {
+  if (include_fields.size) {
     return include_fields.has(_key)
   }
 
