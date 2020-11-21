@@ -49,7 +49,7 @@ if __name__ == "__main__":
     env.get_template('home.html').stream(context).dump("index.html")
 
     # Build the admin index.html
-    env.get_template('admin.html').stream(context).dump("admins/index.html")
+    env.get_template('admin.html').stream(context).dump("draw/index.html")
 
     # Build each of the map folders (in order of folder name alphabetically)
     for dir_name, config in configs.items():
