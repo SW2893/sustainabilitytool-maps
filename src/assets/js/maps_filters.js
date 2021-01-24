@@ -1,24 +1,26 @@
 var current_filters;
+var _config = {};
+var _data = {};
+var bounds = new google.maps.LatLngBounds();
 
-var exclude_include_keywords = [
-  'address', 'place', 'marker', 'colour'
-]
-var exclude_exact_keywords = [
-  'name', 'host', 'logo', 'website', 'location', 'town',
-  'postcode', 'county', 'country', 'lat', 'lng'
-]
+function shouldUseKey(key) {
+  var search_config = (_config.search || {})
+  var _key = key.toLowerCase()
+  var include_fields = new Set(search_config.include_fields|| [])
+  if (include_fields.size) {
+    return include_fields.has(_key)
+  }
 
-function useKey(key) {
-  for (kw of exclude_exact_keywords) {
-    if (key.toLowerCase() == kw) {
-      return false
-    }
+  var exclude_fields = new Set(search_config.exclude_fields || [])
+  if (exclude_fields.has(_key)) {
+    return false
   }
-  for (kw of exclude_include_keywords) {
-    if (key.toLowerCase().includes(kw)) {
-      return false
-    }
+
+  var exclude_fields_containing = search_config.exclude_fields_containing || []
+  for (var _field of exclude_fields_containing) {
+    if (_key.includes(_field)) { return false }
   }
+
   return true
 }
 
@@ -27,7 +29,7 @@ function create_filters(data) {
   var filters = {}
   for (var item of data) {
     for (var [key, value] of Object.entries(item)) {
-      if (!useKey(key)) { continue; }
+      if (!shouldUseKey(key)) { continue; }
       // Add the key to the filters if it doesn't already exist
       if (!(key in filters)) { filters[key] = new Set(); }
       // Add the value to the set
@@ -70,16 +72,23 @@ function add_filter(key, values) {
     current_filters[key] = selected_values
     console.log( "Current filters", current_filters);
 
+    bounds = new google.maps.LatLngBounds();
+
     clearMarkers()
     plotMarkers()
 
+    clearPolygons()
+    plotUserPolygons()
+
     clearRegions()
     plotRegions()
+
+    map.fitBounds(bounds);
   });
 }
 
 function apply_filters(data, config) {
-  // 
+  //
   filters = create_filters(data)
 
   // Clear the filters element to get started from scratch
@@ -100,23 +109,20 @@ function apply_filters(data, config) {
 
 // In your Javascript (external .js resource or <script> tag)
 $(document).ready(function() {
-  // Initialize the data
-  var config = {}
-  var data = {}
-
-  $when(
-    $.getJSON("./config.json", function(_data) {
-      console.log("Loaded config.json", _data)
-      config = (_data || {})
+  console.log("LOADING DATA AND CONFIGS!")
+  $.when(
+    $.getJSON("./config.json", function(data) {
+      console.log("Loaded config.json", data)
+      _config = (data || {})
     }),
-    $.getJSON("./data.json", function(_data) {
-      console.log("Loaded data.json", _data)
+    $.getJSON("./data.json", function(data) {
+      console.log("Loaded data.json", data)
       // Filter only MEPs with lat/lng
-      //data = (_data || []).filter(o => ("lat" in o))
-      data = (_data || [])
+      //_data = (data || []).filter(o => ("lat" in o))
+      _data = (data || [])
     })
   ).then(function() {
-    apply_filters(data, config)
+    apply_filters(_data, _config)
   })
 
 });
