@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="container">
+
+<div class="row">
+  <div class="col m-0 p-0">
+    <p>Welcome to the Supply Chain Sustainability School mapping pages.</p>
+    <p>The following pages contain links to data collated by the Supply Chain Sustainability School and their partners.</p>
+  </div>
+</div>
+
+{% for key, config in map_configs.items()|sort(attribute='0') %}
+  <div class="row mb-3">
+    <div class="card w-100">
+      <div class="card-body">
+
+        <div class="row">
+          <div class="col">
+            <h4 class="card-title">
+              <a class="text-secondary" href="/{{ key }}/index.html">{{ config.title }}</a>
+            </h4>
+            {{ config.description }}
+          </div>
+          {% if config.thumbnail %}
+          <div class="col-sm-auto">
+            <img height="150px" src="{{ config.thumbnail }}">
+          </div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+</div>
+
+{% endblock %}

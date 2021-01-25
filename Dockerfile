@@ -4,7 +4,8 @@ ENV PYTHONUNBUFFERED 1
 RUN mkdir /src
 WORKDIR /src
 
-ADD pip.conf /etc/
-ADD requirements.txt /src/
+ADD ./src /src
+ADD ./docker/local/python/pip.conf /etc/
+ADD ./docker/local/python/requirements.txt /src/
 
 RUN pip install --upgrade pip && pip install -r requirements.txt

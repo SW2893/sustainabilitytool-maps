@@ -1,8 +1,10 @@
 var map;
-var raw_data = [];
+//var _data = [];
 var markers = [];
+var polygons = [];
 var current_filters = {}
-var region_features = []
+var region_features = [];
+var bounds;
 
 // Sets the map on all markers in the array.
 function setMapOnAll(map) {
@@ -27,6 +29,14 @@ function clearRegions() {
     }
   }*/
   map.data.setStyle({visible: false})
+}
+
+function clearPolygons() {
+  console.log("Clearing polygons")
+  for (var i = 0; i < polygons.length; i++) {
+    polygons[i].setMap(null);
+  }
+  polygons = []
 }
 
 function distance(lat1, lon1, lat2, lon2, unit) {
@@ -82,7 +92,7 @@ function getContentString(include_keys, exclude_keys, parsed_meps, include_title
 
 function getMepText(mep) {
   var content_string = ""
-  var exclude_keys = ["color", "colour", "lat", "lng", "place_id", "location"]
+  var exclude_keys = (_config.infobox || {}).exclude_fields || []
 
   parsed_meps = {}
   for (var [key, value] of Object.entries(mep)) {
@@ -140,6 +150,7 @@ function addMarker(mep) {
         url: `https://maps.google.com/mapfiles/ms/icons/${colour}-dot.png`
       }
   });
+  bounds.extend(marker.getPosition());
 
   // Add a listener to show the content on click
   google.maps.event.addListener(marker, 'click', function() {
@@ -177,6 +188,9 @@ function styleFeature(feature) {
   var zIndex = regionLevel == 'eer' ? 0 : 1
   return ({
     visible: true,
+    strokeColor: color,
+    strokeOpacity: 0.6,
+    strokeWeight: 1,
     fillColor: color,
     fillOpacity: opacity,
     strokeWeight: 0,
@@ -224,6 +238,11 @@ function setFeatureProperties(feature, mep_location_map, set_global=false) {
   feature.setProperty('regionName', regionName)
   feature.setProperty('infoContent', infoContent)
 
+  console.log("Getting bounds from feature", feature)
+  feature.getGeometry().forEachLatLng(function(latlng) {
+     bounds.extend(latlng);
+  });
+
   map.data.overrideStyle(feature, styleFeature(feature));
 }
 
@@ -248,7 +267,7 @@ function setCountySelector(features) {
   // Add this to the selection filter
   var key = "County"
   var id_key = "counties"
-  var text = "<div class='col-sm-12'><label class='map-filter-label'>Within 30km of county:<small>(<a href='#' id='clearcounty'>clear</a>)</small></label>"
+  var text = "<div class='col-sm-12'><label class='map-filter-label'>Search by county or location:<small>(<a href='#' id='clearcounty'>clear</a>)</small></label>"
   text += "<select class='map-filter' id='" + id_key + "' name='" + id_key + "[]'>"
   for (var [code, values] of Object.entries(county_map)) {
     text += "<option value='" + code + "'>" + values['name'] + "</option>"
@@ -306,13 +325,17 @@ function loadRegionFeatures(mep_location_map) {
   });
 }
 
+function hasPolygonData(data) {
+  return ((data.Polygon || "").trim() != "")
+}
+
 function plotRegions(data) {
-  data = data || raw_data;
-  console.log("Plotting regions for items with no address")
+  data = data || _data;
+  console.log("Plotting regions for items with no address or user-defined polygon")
   infowindow = new google.maps.InfoWindow({ content: 'holding...' });
 
   // Get only the MEPs without lat/lng keys
-  var meps = (data || []).filter(o => (!("lat" in o)))
+  var meps = (data || []).filter(o => (!("lat" in o) && !hasPolygonData(o)))
   console.log("MEP data without lat/lng for regions", meps)
 
   meps = filter_data(meps)
@@ -356,8 +379,51 @@ function plotRegions(data) {
  });
 }
 
+function drawPolygon(data) {
+  const pointsArray = JSON.parse( data.Polygon )
+  const points = pointsArray.map(p => {
+    var pnt = { lat: p[0], lng: p[1] }
+    bounds.extend(pnt)
+    return (pnt)
+  })
+  infowindow = new google.maps.InfoWindow({ content: 'holding...' });
+
+  // Load the data and plot the markers and regions
+  const polygon = new google.maps.Polygon({
+    paths: points,
+    strokeColor: "red",
+    strokeOpacity: 0.6,
+    strokeWeight: 1,
+    fillColor: "red",
+    fillOpacity: 0.2,
+    zIndex: 1,
+    map: map
+  });
+
+  google.maps.event.addListener(polygon, "click", (event) => {
+    console.log("Clicked on polygon", event.latLng)
+    infowindow.setContent(getMepText(data));
+    infowindow.setPosition(event.latLng);
+    infowindow.open(map);
+  });
+
+  // Add this marker to the global list
+  polygons.push(polygon)
+}
+
+function plotUserPolygons(data) {
+  console.log("Plotting user defined polygon regions")
+  data = data || _data;
+  infowindow = new google.maps.InfoWindow({ content: 'holding...' });
+  var meps = (data || []).filter(o => hasPolygonData(o))
+  meps = filter_data(meps)
+  for (var mep of meps) {
+    drawPolygon(mep)
+  }
+}
+
 function plotMarkers(data) {
-  data = data || raw_data;
+  data = data || _data;
   // Get only the MEPs with lat/lng keys
   var meps = (data || []).filter(o => ("lat" in o))
   console.log("MEP data with lat/lng for markers", meps)
@@ -385,9 +451,10 @@ function initMepMap() {
   );
 
   // Load the data and plot the markers and regions
-  $.getJSON("/mep/data.json", function(data) {
-    raw_data = data;
+  $.getJSON("./data.json", function(data) {
+    _data = data;
     plotMarkers(data);
+    plotUserPolygons(data);
     plotRegions(data, setGlobalVis=true);
   })
 }

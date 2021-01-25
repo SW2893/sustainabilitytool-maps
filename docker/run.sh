@@ -7,8 +7,12 @@ case "$1" in
 dev)
   docker-compose -f ${HOST_SRC_PATH}docker/local/docker-stack.yml up nginx
   ;;
-python)
-  docker run --rm -it -v ${HOST_SRC_PATH}/src:/src --env-file $HOME/.secrets/GOOGLE_MAPS_API_KEY python:3.8-alpine sh
+python-dev)
+  docker build . -t maps:dev && \
+  docker run --rm -it \
+  --env-file $HOME/.secrets/GOOGLE_MAPS_API_KEY \
+  -v ${HOST_SRC_PATH}/src:/src \
+  maps:dev sh
   ;;
 node)
   docker run --rm -it -v ${HOST_SRC_PATH}/src:/src/ node:10.14-slim sh
@@ -18,6 +22,9 @@ parse)
   ;;
 build)
   docker run --rm -it -v ${HOST_SRC_PATH}/src:/src --env-file $HOME/.secrets/GOOGLE_MAPS_API_KEY python:3.8-alpine python /src/build.py
+  ;;
+docker-build)
+  docker build . -t maps:dev && docker run --rm --env-file $HOME/.secrets/GOOGLE_MAPS_API_KEY python /src/parse.py
   ;;
 down)
   docker-compose -f ${HOST_SRC_PATH}docker/local/docker-stack.yml down

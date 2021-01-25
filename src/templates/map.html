@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+  <div class="container-fluid">
+    {{ config.preamble|safe }}
+  </div>
+
+  {% include "search.html" %}
+
+  <div id="map-canvas" class="flex-fill"></div>
+
+{% endblock %}

@@ -1,24 +1,26 @@
 var current_filters;
+var _config = {};
+var _data = {};
+var bounds = new google.maps.LatLngBounds();
 
-var exclude_include_keywords = [
-  'address', 'place', 'marker', 'colour'
-]
-var exclude_exact_keywords = [
-  'name', 'host', 'logo', 'website', 'location', 'town',
-  'postcode', 'county', 'country', 'lat', 'lng'
-]
+function shouldUseKey(key) {
+  var search_config = (_config.search || {})
+  var _key = key.toLowerCase()
+  var include_fields = new Set(search_config.include_fields|| [])
+  if (include_fields.size) {
+    return include_fields.has(_key)
+  }
 
-function useKey(key) {
-  for (kw of exclude_exact_keywords) {
-    if (key.toLowerCase() == kw) {
-      return false
-    }
+  var exclude_fields = new Set(search_config.exclude_fields || [])
+  if (exclude_fields.has(_key)) {
+    return false
   }
-  for (kw of exclude_include_keywords) {
-    if (key.toLowerCase().includes(kw)) {
-      return false
-    }
+
+  var exclude_fields_containing = search_config.exclude_fields_containing || []
+  for (var _field of exclude_fields_containing) {
+    if (_key.includes(_field)) { return false }
   }
+
   return true
 }
 
@@ -27,7 +29,7 @@ function create_filters(data) {
   var filters = {}
   for (var item of data) {
     for (var [key, value] of Object.entries(item)) {
-      if (!useKey(key)) { continue; }
+      if (!shouldUseKey(key)) { continue; }
       // Add the key to the filters if it doesn't already exist
       if (!(key in filters)) { filters[key] = new Set(); }
       // Add the value to the set
@@ -70,34 +72,57 @@ function add_filter(key, values) {
     current_filters[key] = selected_values
     console.log( "Current filters", current_filters);
 
+    bounds = new google.maps.LatLngBounds();
+
     clearMarkers()
     plotMarkers()
 
+    clearPolygons()
+    plotUserPolygons()
+
     clearRegions()
     plotRegions()
+
+    map.fitBounds(bounds);
   });
+}
+
+function apply_filters(data, config) {
+  //
+  filters = create_filters(data)
+
+  // Clear the filters element to get started from scratch
+  $(".map-filters").empty()
+
+  // Add the dropdown filter selections
+  for (var [key, values] of Object.entries(filters)) {
+    add_filter(key, values);
+  }
+
+  // Add a clear and submit button
+  var filter_buttons = "<div class='col-sm-12 mb-2 text-right'>"
+  //filter_buttons += "<button id='clear-filters' class='btn btn-sm btn-secondary'>Clear</button>"
+  //filter_buttons += "<button id='submit-filters' class='btn btn-sm btn-primary'>Apply</button>"
+  filter_buttons += "</div>"
+  $(".map-filters").append(filter_buttons)
 }
 
 // In your Javascript (external .js resource or <script> tag)
 $(document).ready(function() {
-
-  $.getJSON("/mep/data.json", function(data) {
-    // Filter only MEPs with lat/lng
-    //var meps = (data || []).filter(o => ("lat" in o))
-    var meps = (data || [])
-    filters = create_filters(meps)
-
-    // Add the dropdown filter selections
-    for (var [key, values] of Object.entries(filters)) {
-      add_filter(key, values);
-    }
-
-    // Add a clear and submit button
-    var filter_buttons = "<div class='col-sm-12 mb-2 text-right'>"
-    //filter_buttons += "<button id='clear-filters' class='btn btn-sm btn-secondary'>Clear</button>"
-    //filter_buttons += "<button id='submit-filters' class='btn btn-sm btn-primary'>Apply</button>"
-    filter_buttons += "</div>"
-    $(".map-filters").append(filter_buttons)
+  console.log("LOADING DATA AND CONFIGS!")
+  $.when(
+    $.getJSON("./config.json", function(data) {
+      console.log("Loaded config.json", data)
+      _config = (data || {})
+    }),
+    $.getJSON("./data.json", function(data) {
+      console.log("Loaded data.json", data)
+      // Filter only MEPs with lat/lng
+      //_data = (data || []).filter(o => ("lat" in o))
+      _data = (data || [])
+    })
+  ).then(function() {
+    apply_filters(_data, _config)
   })
-  
+
 });

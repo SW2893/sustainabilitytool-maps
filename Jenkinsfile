@@ -1,19 +1,16 @@
 pipeline {
-  agent {
-    docker {
-       image 'python:3.8-alpine'
-    }
-  }
+  agent { dockerfile true }
 
   environment {
-    GM_API_KEY = credentials('google-maps-DEV-api-key')
+    GM_API_KEY_DEV = credentials('google-maps-DEV-api-key')
+    GM_API_KEY = credentials('google-maps-PROD-api-key')
     HOME = '.'
   }
 
   stages {
     stage('Geocode the data') {
       steps {
-        sh 'cd src/mep && python parse.py'
+        sh 'cd src && python build.py'
       }
     }
 
