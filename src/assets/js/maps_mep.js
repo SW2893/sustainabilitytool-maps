@@ -229,10 +229,12 @@ function setFeatureProperties(feature, mep_location_map, set_global=false) {
     }
     return null;
   }
+
   // Add this to the global list of regions
-  if (set_global) {
-    region_features.push(feature)
-  }
+  //if (set_global) {
+  //  region_features.push(feature)
+  //}
+
   console.log("Setting properties for region", regionLevel, regionName)
   feature.setProperty('regionLevel', regionLevel)
   feature.setProperty('regionName', regionName)
@@ -248,6 +250,11 @@ function setFeatureProperties(feature, mep_location_map, set_global=false) {
 
 function setFeaturePropertiesAndStyles(features, mep_location_map, set_global=false) {
   for (var feature of features) {
+    // Add this to the global list of regions
+    if (set_global) {
+      region_features.push(feature)
+    }
+    // Set the features and properties for this
     setFeatureProperties(feature, mep_location_map, set_global)
   }
 }
