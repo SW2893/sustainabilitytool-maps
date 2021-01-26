@@ -229,10 +229,12 @@ function setFeatureProperties(feature, mep_location_map, set_global=false) {
     }
     return null;
   }
+
   // Add this to the global list of regions
-  if (set_global) {
-    region_features.push(feature)
-  }
+  //if (set_global) {
+  //  region_features.push(feature)
+  //}
+
   console.log("Setting properties for region", regionLevel, regionName)
   feature.setProperty('regionLevel', regionLevel)
   feature.setProperty('regionName', regionName)
@@ -248,6 +250,11 @@ function setFeatureProperties(feature, mep_location_map, set_global=false) {
 
 function setFeaturePropertiesAndStyles(features, mep_location_map, set_global=false) {
   for (var feature of features) {
+    // Add this to the global list of regions
+    if (set_global) {
+      region_features.push(feature)
+    }
+    // Set the features and properties for this
     setFeatureProperties(feature, mep_location_map, set_global)
   }
 }
@@ -269,7 +276,12 @@ function setCountySelector(features) {
   var id_key = "counties"
   var text = "<div class='col-sm-12'><label class='map-filter-label'>Search by county or location:<small>(<a href='#' id='clearcounty'>clear</a>)</small></label>"
   text += "<select class='map-filter' id='" + id_key + "' name='" + id_key + "[]'>"
-  for (var [code, values] of Object.entries(county_map)) {
+  // Order the items before rendering
+  let ordered_items = Object.entries(county_map).sort(
+    (a, b) => (a[1].name.localeCompare(b[1].name))
+  )
+  // Generate the option strings
+  for (var [code, values] of ordered_items) {
     text += "<option value='" + code + "'>" + values['name'] + "</option>"
   }
   text += "</select></div>"
