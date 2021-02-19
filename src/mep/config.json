@@ -6,7 +6,7 @@
     "heading_map": {
         "Material Exchange Platform (MEP)": "Name"
     },
-    "search_tips": "Click to show and apply filters. Click on a region to show MEP's servicing that area online, or markers for MEPs with physical addresses. Red = Buy and Sell, Blue = Sell/donate only, Green = Buy only.",
+    "search_tips": "Click to show and apply filters. Click on a region to show MEP's servicing that area online, or markers for MEPs with physical addresses. Whole regions show as shaded red. Red = Buy and Sell, Blue = Sell/donate only, Green = Buy only, Purple = Social Enterprise, Yellow = Academic Institution.",
     "preamble": "<p>The Waste and Resource Efficiency Category Group established the need to know which Material Exchange Platforms (MEPs) are available within the UK. This map provides detailed information about most of the well-known MEPs. Action Sustainability and the Supply Chain Sustainability School are not rating, scoring, providing opinion or assessing the MEPs displayed. All the information provided is from information found within the public domain.</p>",
     "search": {
       "exclude_fields": ["address", "place", "marker", "colour", "place_id"],
