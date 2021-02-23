@@ -21,7 +21,7 @@
             <h4 class="card-title">
               <a class="text-secondary" href="/{{ key }}/index.html">{{ config.title }}</a>
             </h4>
-            {{ config.description }}
+            {{ config.description|safe }}
           </div>
           {% if config.thumbnail %}
           <div class="col-sm-auto">
