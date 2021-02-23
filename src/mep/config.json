@@ -1,10 +1,6 @@
 {
     "title": "Material Exchange Platforms (MEPs)",
-<<<<<<< HEAD
-    "description": "The Material Exchange Platform (MEP) Map has been set up to provide a searchable ‘directory’ of information on the location and characteristics of a variety of Materials Exchange Platforms across the UK. You may have surplus stock from a recently finished project, or are looking for second hand upcycled furniture; these are some examples of how you might use MEPs.<br/><br/>NB: The map is as a meta data tool. The School has collated existing publicly available information on MEPs presenting it in one, easily-accessible place. Other than checking the continued existence of any given MEP, we have not added any further information, comment or qualification as to its nature. Moreover, the School is neither endorsing, recommending nor rating any of the material exchange platforms within the map. It is for the map user to do their own due diligence on any MEPs for which they get results.",
-=======
     "description": "The Material Exchange Platform (MEP) Map has been set up to provide a searchable ‘directory’ of information on the location and characteristics of a variety of Materials Exchange Platforms across the UK. You may have surplus stock from a recently finished project, or are looking for second hand upcycled furniture; these are some examples of how you might use MEPs.\n\nNB: The map is as a meta data tool. The School has collated existing publicly available information on MEPs presenting it in one, easily-accessible place. Other than checking the continued existence of any given MEP, we have not added any further information, comment or qualification as to its nature. Moreover, the School is neither endorsing, recommending nor rating any of the material exchange platforms within the map. It is for the map user to do their own due diligence on any MEPs for which they get results.",
->>>>>>> 573475168f87ef292be0cc01db105c029278c252
     "thumbnail": "/mep/thumbnail.png",
     "heading_map": {
         "Material Exchange Platform (MEP)": "Name"
