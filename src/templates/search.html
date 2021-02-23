@@ -1,8 +1,25 @@
 <div class="container-fluid">
-  <a class="btn btn-sm btn-primary collapsed mt-1 mb-1" data-toggle="collapse" data-target="#collapseExampleArea" href="#collapseExampleArea" aria-expanded="false">
-    <span class="map-filter-label">Advanced Search:</span>
-  </a>
+
+    <a class="btn btn-sm btn-primary collapsed mt-1 mb-1 float-left" data-toggle="collapse" data-target="#collapseExampleArea" href="#collapseExampleArea" aria-expanded="false">
+      <span class="map-filter-label">Advanced Search:</span>
+    </a>
+
+    <div class="helpcollapse previewcollapse">
+      <div class="collapse" id="collapseHelp" aria-expanded="false" style="line-height: 1; margin-top: 0.1rem">
+        <small>
+          <a role="button" class="collapsed" data-toggle="collapse" href="#collapseHelp" 
+        aria-expanded="false" aria-controls="collapseHelp">
+            Help
+          </a>
+        </small>
+        <small class="text-secondary">{{ config.search_tips }}</small>
+      </div>
+    </div>
+  <div style="clear: both"></div>
+
+  <!--<div id="collapseOne">
   <small class="text-secondary">{{ config.search_tips }}</small>
+  </div>-->
 
   <div id="collapseExampleArea" class="collapse">
     <div class="row county-select"></div>
