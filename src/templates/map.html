@@ -3,7 +3,15 @@
 {% block body %}
 
   <div class="container-fluid">
-    {{ config.preamble|safe }}
+
+    <div class="previewcollapse">
+      <div class="collapse" id="collapseDescription" aria-expanded="false">
+        <a role="button" class="collapsed" data-toggle="collapse" href="#collapseDescription" 
+        aria-expanded="false" aria-controls="collapseDescription">Description</a>
+        {{ config.preamble|safe }}
+      </div>
+    </div>
+
   </div>
 
   {% include "search.html" %}

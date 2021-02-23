@@ -49,3 +49,45 @@
 .text-sps {
   color: #212529 !important;
 }
+
+
+.previewcollapse .collapse, .previewcollapse .collapsing {
+  height: 1.5rem;  /* [NUM_OF_LINES] x [LINE_HEIGHT] */
+}
+
+.previewcollapse .collapse {
+  position: relative;  /* For ...'s content absolute positioning */
+  display: block;
+  overflow: hidden;
+}
+
+.previewcollapse .collapse.show {
+  height: auto;  /* You need to reset the height when not collapsed */
+}
+
+.previewcollapse .collapse.show:before {
+  display: none;  /* Of course you don't want to display ... */
+}
+
+.previewcollapse a {
+  color:black;
+}
+
+.collapse > *:nth-child(2) {
+  display: inline;
+}
+
+.previewcollapse a.collapsed:after {
+  content: '(+):';
+}
+
+.previewcollapse a:not(.collapsed):after {
+  content: '(-):';
+  transform: rotate(0);
+}
+
+/* --------------- */
+
+.helpcollapse .collapse, .helpcollapse .collapsing {
+  height: 2rem;  /* [NUM_OF_LINES] x [LINE_HEIGHT] */
+}
